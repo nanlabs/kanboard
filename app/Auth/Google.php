@@ -28,12 +28,16 @@ class Google extends Base
      * Authenticate a Google user
      *
      * @access public
-     * @param  string  $google_id   Google unique id
+     * @param  array  $profile   Google profile
      * @return boolean
      */
-    public function authenticate($google_id)
+    public function authenticate( array $profile)
     {
-        $user = $this->user->getByGoogleId($google_id);
+        $user = $this->user->getByGoogleId($profile['id']);
+
+        if(empty($user) && GOOGLE_AUTH_PRELINK) {
+            $user = $this->prelink($profile);
+        }
 
         if (! empty($user)) {
             $this->userSession->refresh($user);
@@ -42,6 +46,21 @@ class Google extends Base
         }
 
         return false;
+    }
+
+    /**
+    * Prelink Google account based on email
+    * @access private
+    * @param array $profile User profile
+    * @return array
+    */
+    private function prelink($profile)
+    {
+        $user = $this->user->getByEmail($profile['email']);
+        if(! empty($user)) {
+            $this->updateUser($user['id'], $profile);
+        }
+        return $user;
     }
 
     /**

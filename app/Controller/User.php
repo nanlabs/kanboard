@@ -446,7 +446,7 @@ class User extends Base
 
                     $this->response->redirect('?controller=user&action=external&user_id='.$this->userSession->getId());
                 }
-                else if ($this->authentication->backend('google')->authenticate($profile['id'])) {
+                else if ($this->authentication->backend('google')->authenticate($profile)) {
                     $this->response->redirect('?controller=app');
                 }
                 else {

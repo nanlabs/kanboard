@@ -142,6 +142,19 @@ class User extends Base
     }
 
     /**
+     * Get a specific user by the email
+     *
+     * @access public
+     * @param  string  $email  Email
+     * @return array
+     */
+    public function getByEmail($email)
+    {
+        return $this->db->table(self::TABLE)->eq('email', $email)->findOne();
+    }
+
+
+    /**
      * Get all users
      *
      * @access public
